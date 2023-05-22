@@ -146,14 +146,10 @@ struct Xor {
     w2: Mat,
     b2: Mat,
     a1: Mat,
-    a2: Mat,
 }
 
 impl Xor {
-    fn forward(&mut self, x1: f64, x2: f64) -> Mat {
-        self.x.set(0, 0, x1);
-        self.x.set(0, 1, x2);
-
+    fn forward(&mut self) -> Mat {
         // 1st neuron
         // pass x through first layer
         self.a1 = self.x.dot(&self.w1).unwrap();
@@ -193,17 +189,14 @@ fn main() {
         b2: Mat::new_random(1, 1, SEED + 3),
 
         a1: Mat::new(1, 2, vec![0.0, 0.0]),
-        a2: Mat::new(1, 1, vec![0.0]),
     };
 
     for i in 0..2 {
         for j in 0..2 {
-            println!(
-                "{} ^ {} = {}",
-                i,
-                j,
-                xor.forward(i as f64, j as f64).get(0, 0).unwrap()
-            );
+            xor.x.set(0, 0, i as f64);
+            xor.x.set(0, 1, j as f64);
+            let ym = xor.forward();
+            println!("{} ^ {} = {}", i, j, ym.get(0, 0).unwrap());
         }
     }
 }
